@@ -43,10 +43,28 @@ https://docs.metaplex.com/
 
 ## Installing
 
-Clone the repo, and run `yarn start` to deploy.
+### Install Rust
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Install Solana
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/v1.9.0/install)"
+export PATH="/home/dsd/.local/share/solana/install/active_release/bin:$PATH"
+```
+
+### Install Node.js
+```bash
+curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g npm@latest
+sudo npm install -g lerna
+```
+### Install Metaplex
 
 ```bash
-$ git clone https://github.com/metaplex-foundation/metaplex.git
+$ git clone https://github.com/Dasudian/metaplex.git
 $ cd metaplex/js
 $ yarn install && yarn bootstrap && yarn build
 $ yarn start
