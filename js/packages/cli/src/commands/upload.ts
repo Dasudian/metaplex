@@ -96,6 +96,7 @@ export async function uploadV2({
   }
   const dedupedAssetKeys = getAssetKeysNeedingUpload(existingInCache, files);
   const SIZE = dedupedAssetKeys.length;
+  console.log('Size', SIZE);
   let candyMachine = cacheContent.program.candyMachine
     ? new PublicKey(cacheContent.program.candyMachine)
     : undefined;
@@ -206,7 +207,7 @@ export async function uploadV2({
       chunks(Array.from(Array(SIZE).keys()), batchSize || 50).map(
         async allIndexesInSlice => {
           for (let i = 0; i < allIndexesInSlice.length; i++) {
-            const assetKey = dedupedAssetKeys[i];
+            const assetKey = dedupedAssetKeys[allIndexesInSlice[i]];
             const image = path.join(
               dirname,
               `${assetKey.index}${assetKey.mediaExt}`,
@@ -220,10 +221,10 @@ export async function uploadV2({
             const manifestBuffer = Buffer.from(JSON.stringify(manifest));
             if (i >= lastPrinted + tick || i === 0) {
               lastPrinted = i;
-              log.info(`Processing asset: ${assetKey}`);
+              log.info(`Processing asset: ${allIndexesInSlice[i]}`);
             }
 
-            if (i === 0 && !cacheContent.program.uuid) {
+            if (allIndexesInSlice[i] === 0 && !cacheContent.program.uuid) {
               try {
                 const remainingAccounts = [];
 
@@ -283,7 +284,7 @@ export async function uploadV2({
 
             if (i >= lastPrinted + tick || i === 0) {
               lastPrinted = i;
-              log.info(`Processing asset: ${assetKey}`);
+              log.info(`Processing asset: ${allIndexesInSlice[i]}`);
             }
 
             let link, imageLink;
@@ -316,7 +317,7 @@ export async function uploadV2({
                   );
               }
               if (link && imageLink) {
-                log.debug('Updating cache for ', assetKey);
+                log.debug('Updating cache for ', allIndexesInSlice[i]);
                 cacheContent.items[assetKey.index] = {
                   link,
                   imageLink,
